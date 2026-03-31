@@ -1,0 +1,64 @@
+{% extends "layouts/base.njk" %}
+
+{% set algorithm = algorithms[algorithmKey] %}
+{% set ui = algorithm.ui or {} %}
+{% set renderer = ui.renderer or "bars" %}
+{% set mode = ui.mode or "default" %}
+
+{% block content %}
+<section
+  class="screen"
+  data-algorithm-id="{{ algorithm.meta.id }}"
+  data-renderer="{{ renderer }}"
+  data-mode="{{ mode }}"
+>
+  <header class="screen__header">
+    <div>
+      <h1>{{ algorithm.meta.title }}</h1>
+      {% if algorithm.meta.description %}
+        <p class="subtitle">{{ algorithm.meta.description }}</p>
+      {% endif %}
+    </div>
+  </header>
+
+  <section class="panel search-demo">
+    <div class="search-demo__stats" id="stats-root">
+      <div class="stat-card">
+        <div class="stat-card__label">Target</div>
+        <div class="stat-card__value" id="stat-target">{{ algorithm.search.target or "—" }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card__label">Index</div>
+        <div class="stat-card__value" id="stat-index">—</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card__label">Value</div>
+        <div class="stat-card__value" id="stat-value">—</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card__label">Result</div>
+        <div class="stat-card__value" id="stat-result">Ожидание</div>
+      </div>
+    </div>
+
+    <div id="chart-root" class="search-demo__chart"></div>
+
+    <div id="message-root" class="search-demo__message">
+      Готово к запуску.
+    </div>
+
+    <div class="search-demo__controls">
+      <button class="btn" type="button" data-action="prev">Назад</button>
+      <button class="btn btn--accent" type="button" data-action="next">Следующий шаг</button>
+      <button class="btn" type="button" data-action="toggle-play" id="play-toggle">Play</button>
+      <button class="btn btn--danger" type="button" data-action="reset">Reset</button>
+    </div>
+  </section>
+</section>
+
+<script type="application/json" id="algorithm-config">{{ algorithm | dump | safe }}</script>
+<script type="module" src="/assets/js/visualizer.js"></script>
+{% endblock %}

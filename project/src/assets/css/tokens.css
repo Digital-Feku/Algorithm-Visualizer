@@ -1,0 +1,26 @@
+/* 
+Файл со всеми цветами тенями и основными переменными
+*/
+
+:root {
+  --bg-1: #020617;
+  --bg-2: #0f172a;
+
+  --panel: rgba(15, 23, 42, 0.88);
+  --panel-2: rgba(30, 41, 59, 0.88);
+
+  --border: #334155;
+
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #60a5fa;
+
+  --bar: #334155;
+  --bar-checked: #475569;
+  --bar-current: #f59e0b;
+  --bar-found: #22c55e;
+
+  --danger: #ef4444;
+
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}

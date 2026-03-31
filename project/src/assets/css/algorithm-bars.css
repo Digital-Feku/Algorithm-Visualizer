@@ -1,0 +1,126 @@
+/* 
+ Визуализация алгоритмов через таблицы
+
+ -блок линейного поиска
+ -область со столбцами
+ -отдельный столбец
+ -состояние столбца
+ -сообщение
+ -нижняя панель управления
+*/
+
+
+.search-demo {
+  display: grid;
+  gap: 20px;
+}
+
+.search-demo__top {
+  display: grid;
+  gap: 12px;
+}
+
+.search-demo__title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.search-demo__subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+
+.search-demo__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.search-demo__chart {
+  min-height: 380px;
+  display: flex;
+  align-items: end;
+  gap: 14px;
+  padding: 28px 20px 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)),
+    rgba(15, 23, 42, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  overflow-x: auto;
+}
+
+.bar-item {
+  width: 72px;
+  flex: 0 0 72px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.bar-value {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.bar-column-wrap {
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+
+.bar-column {
+  width: 100%;
+  border-radius: 16px 16px 10px 10px;
+  background: var(--bar);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    height 0.25s ease,
+    background 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  position: relative;
+}
+
+.bar-column.is-checked {
+  background: var(--bar-checked);
+}
+
+.bar-column.is-current {
+  background: var(--bar-current);
+  transform: translateY(-6px);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.bar-column.is-found {
+  background: var(--bar-found);
+  transform: translateY(-8px);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.22);
+}
+
+.bar-index {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.search-demo__message {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.search-demo__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

@@ -1,0 +1,28 @@
+/* 
+Базовая основа страницы
+Общий фон страницы, шрифт, цвет текста, сброс стандартных отступов и базовый стиль h1
+*/
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  color: var(--text);
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.1;
+}
