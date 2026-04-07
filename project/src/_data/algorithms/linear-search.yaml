@@ -1,0 +1,75 @@
+meta:
+  id: linear-search
+  title: Визуализация линейного поиска
+  description: Поиск нужного значения в массиве путем поочередного сравнения.
+
+engine:
+  type: linear-search
+
+ui:
+  renderer: algorithm-runtime
+  primaryVisualization: array-bars
+  stats:
+    - key: target
+      label: Target
+    - key: index
+      label: Index
+    - key: value
+      label: Value
+    - key: result
+      label: Result
+
+data:
+  array: [4, 12, 7, 19, 2, 15, 9, 21, 6, 18]
+  target: 15
+  autoplayDelay: 700
+
+pseudocode:
+  lines:
+    - id: loop
+      text: for (let i = 0; i < array.length; i += 1)
+    - id: compare
+      text: '  if (array[i] === target)'
+    - id: found
+      text: '    return i;'
+    - id: return-miss
+      text: return -1;
+
+flowchart:
+  nodes:
+    - id: start
+      type: terminal
+      label: Start
+    - id: loop
+      type: decision
+      label: i < n ?
+    - id: compare
+      type: decision
+      label: array[i] == target ?
+    - id: next
+      type: process
+      label: i = i + 1
+    - id: found
+      type: terminal
+      label: return i
+    - id: not-found
+      type: terminal
+      label: return -1
+
+  edges:
+    - from: start
+      to: loop
+    - from: loop
+      to: compare
+      label: yes
+    - from: loop
+      to: not-found
+      label: no
+    - from: compare
+      to: found
+      label: yes
+    - from: compare
+      to: next
+      label: no
+    - from: next
+      to: loop

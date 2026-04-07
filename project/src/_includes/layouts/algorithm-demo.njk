@@ -1,64 +1,77 @@
 {% extends "layouts/base.njk" %}
 
 {% set algorithm = algorithms[algorithmKey] %}
-{% set ui = algorithm.ui or {} %}
-{% set renderer = ui.renderer or "bars" %}
-{% set mode = ui.mode or "default" %}
 
 {% block content %}
-<section
-  class="screen"
-  data-algorithm-id="{{ algorithm.meta.id }}"
-  data-renderer="{{ renderer }}"
-  data-mode="{{ mode }}"
->
-  <header class="screen__header">
-    <div>
-      <h1>{{ algorithm.meta.title }}</h1>
-      {% if algorithm.meta.description %}
-        <p class="subtitle">{{ algorithm.meta.description }}</p>
-      {% endif %}
-    </div>
-  </header>
+  {% if not algorithm %}
+    <section class="algorithm-screen">
+      <header class="algorithm-screen__header">
+        <div>
+          <h1>Алгоритм не найден</h1>
+          <p class="subtitle">Проверь algorithmKey и ключ в _data/algorithms.</p>
+        </div>
+      </header>
+    </section>
+  {% else %}
+    <section class="algorithm-screen" data-algorithm-id="{{ algorithm.meta.id }}">
+      <header class="algorithm-screen__header">
+        <div>
+          <h1>{{ algorithm.meta.title }}</h1>
+          {% if algorithm.meta.description %}
+            <p class="subtitle">{{ algorithm.meta.description }}</p>
+          {% endif %}
+        </div>
 
-  <section class="panel search-demo">
-    <div class="search-demo__stats" id="stats-root">
-      <div class="stat-card">
-        <div class="stat-card__label">Target</div>
-        <div class="stat-card__value" id="stat-target">{{ algorithm.search.target or "—" }}</div>
-      </div>
+        <div class="algorithm-toolbar">
+          <label class="algorithm-toolbar__label" for="algorithm-switcher">Алгоритм</label>
+          <select id="algorithm-switcher" class="select" aria-label="Выбор алгоритма">
+            <option value="linear-search" selected>Linear Search</option>
+            <option value="bfs">BFS — скоро</option>
+            <option value="dfs">DFS — скоро</option>
+            <option value="dijkstra">Dijkstra — скоро</option>
+          </select>
+        </div>
+      </header>
 
-      <div class="stat-card">
-        <div class="stat-card__label">Index</div>
-        <div class="stat-card__value" id="stat-index">—</div>
-      </div>
+      <section class="algorithm-runtime">
+        <div class="runtime-topline">
+          <div id="runtime-stats" class="runtime-stats"></div>
 
-      <div class="stat-card">
-        <div class="stat-card__label">Value</div>
-        <div class="stat-card__value" id="stat-value">—</div>
-      </div>
+          <div class="runtime-controls">
+            <button class="btn" type="button" data-action="prev">Назад</button>
+            <button class="btn btn--accent" type="button" data-action="next">Следующий шаг</button>
+            <button class="btn" type="button" data-action="toggle-play">Play</button>
+            <button class="btn btn--danger" type="button" data-action="reset">Reset</button>
+          </div>
+        </div>
 
-      <div class="stat-card">
-        <div class="stat-card__label">Result</div>
-        <div class="stat-card__value" id="stat-result">Ожидание</div>
-      </div>
-    </div>
+        <section class="runtime-panel runtime-panel--hero">
+          <div class="runtime-panel__head">
+            <h2 class="runtime-panel__title">Проход по массиву</h2>
+            <div id="runtime-message" class="runtime-message">Готово к запуску.</div>
+          </div>
+          <div id="runtime-flowchart" class="runtime-flowchart"></div>
+        </section>
 
-    <div id="chart-root" class="search-demo__chart"></div>
+        <div class="runtime-bottom">
+          <section class="runtime-panel">
+            <div class="runtime-panel__head">
+              <h2 class="runtime-panel__title">Код алгоритма на JavaScript</h2>
+            </div>
+            <div id="runtime-pseudocode" class="runtime-pseudocode"></div>
+          </section>
 
-    <div id="message-root" class="search-demo__message">
-      Готово к запуску.
-    </div>
+          <section class="runtime-panel">
+            <div class="runtime-panel__head">
+              <h2 class="runtime-panel__title">Легенда и шаг</h2>
+            </div>
+            <div id="runtime-structures" class="runtime-structures"></div>
+          </section>
+        </div>
+      </section>
+    </section>
 
-    <div class="search-demo__controls">
-      <button class="btn" type="button" data-action="prev">Назад</button>
-      <button class="btn btn--accent" type="button" data-action="next">Следующий шаг</button>
-      <button class="btn" type="button" data-action="toggle-play" id="play-toggle">Play</button>
-      <button class="btn btn--danger" type="button" data-action="reset">Reset</button>
-    </div>
-  </section>
-</section>
-
-<script type="application/json" id="algorithm-config">{{ algorithm | dump | safe }}</script>
-<script type="module" src="/assets/js/visualizer.js"></script>
+    <script type="application/json" id="algorithm-config">{{ algorithm | dump | safe }}</script>
+    <script type="module" src="/assets/js/visualizer.js"></script>
+  {% endif %}
 {% endblock %}

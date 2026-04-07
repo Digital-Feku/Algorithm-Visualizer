@@ -1,6 +1,7 @@
-/* 
-Базовая основа страницы
-Общий фон страницы, шрифт, цвет текста, сброс стандартных отступов и базовый стиль h1
+
+/*
+  Это базовый слой страницы.
+  Здесь сбрасывается браузерные мелочи и задаем общий шрифт с цветом текста.
 */
 
 * {
@@ -12,17 +13,24 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  background: var(--bg-1);
   color: var(--text);
-  font-family: Inter, system-ui, Arial, sans-serif;
+  font-family: "Fira Code", monospace;
 }
 
 body {
   min-height: 100vh;
 }
 
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
 h1 {
-  margin: 0 0 8px;
+  margin-bottom: 8px;
   font-size: 32px;
   line-height: 1.1;
 }

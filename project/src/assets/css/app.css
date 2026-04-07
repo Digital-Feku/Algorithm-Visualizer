@@ -1,6 +1,11 @@
+/*
+  Точка сборки всех стилей.
+  Тут просто подключаем остальные CSS в правильном порядке.
+*/
+
 @import url("./tokens.css");
 @import url("./base.css");
 @import url("./layout.css");
 @import url("./components.css");
-@import url("./algorithm-bars.css");
+@import url("./algorithm-runtime.css");
 @import url("./responsive.css");

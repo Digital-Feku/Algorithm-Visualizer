@@ -1,18 +1,21 @@
-// Основной объединяющий файл
+/*
+  Точка входа клиентского визуализатора.
+  Модуль считывает конфигурацию, инициализирует модель, рендерер и плеер,
+  а также связывает элементы управления с таймлайном выполнения алгоритма.
+*/
 
-import { buildLinearSearchSteps } from "./data/linear-search-steps.js";
-import { renderBars } from "./renderers/bars-renderer.js";
-import { renderStats } from "./renderers/stats-renderer.js";
+import { createAlgorithmModel } from "./algorithm-engine.js";
+import { createAlgorithmRenderer } from "./algorithm-renderer.js";
 import { createPlayer } from "./core/player.js";
 
 function readAlgorithmConfig() {
-  const configElement = document.getElementById("algorithm-config");
+  const element = document.getElementById("algorithm-config");
 
-  if (!configElement) {
+  if (!element) {
     throw new Error("Не найден script#algorithm-config");
   }
 
-  const raw = configElement.textContent?.trim();
+  const raw = element.textContent?.trim();
 
   if (!raw) {
     throw new Error("algorithm-config пустой");
@@ -21,116 +24,107 @@ function readAlgorithmConfig() {
   return JSON.parse(raw);
 }
 
-function getRequiredElements() {
-  const statsRoot = document.getElementById("stats-root");
-  const chartRoot = document.getElementById("chart-root");
-  const messageRoot = document.getElementById("message-root");
+function getRoots() {
+  const statsRoot = document.getElementById("runtime-stats");
+  const flowchartRoot = document.getElementById("runtime-flowchart");
+  const pseudocodeRoot = document.getElementById("runtime-pseudocode");
+  const structuresRoot = document.getElementById("runtime-structures");
+  const messageRoot = document.getElementById("runtime-message");
 
   const prevButton = document.querySelector('[data-action="prev"]');
   const nextButton = document.querySelector('[data-action="next"]');
   const togglePlayButton = document.querySelector('[data-action="toggle-play"]');
   const resetButton = document.querySelector('[data-action="reset"]');
+  const algorithmSelect = document.getElementById("algorithm-switcher");
 
-  if (!statsRoot) {
-    throw new Error("Не найден #stats-root");
-  }
-
-  if (!chartRoot) {
-    throw new Error("Не найден #chart-root");
-  }
-
-  if (!messageRoot) {
-    throw new Error("Не найден #message-root");
+  if (!statsRoot || !flowchartRoot || !pseudocodeRoot || !structuresRoot || !messageRoot) {
+    throw new Error("Не найдены runtime root-элементы");
   }
 
   if (!prevButton || !nextButton || !togglePlayButton || !resetButton) {
-    throw new Error("Не найдены кнопки управления visualizer");
+    throw new Error("Не найдены кнопки управления");
   }
 
   return {
     statsRoot,
-    chartRoot,
+    flowchartRoot,
+    pseudocodeRoot,
+    structuresRoot,
     messageRoot,
     prevButton,
     nextButton,
     togglePlayButton,
-    resetButton
+    resetButton,
+    algorithmSelect
   };
 }
 
-function renderPlayerState(elements, state, algorithm) {
-  const {
-    statsRoot,
-    chartRoot,
-    messageRoot,
-    prevButton,
-    nextButton,
-    togglePlayButton
-  } = elements;
-
-  renderBars(chartRoot, state.step);
-  renderStats(statsRoot, messageRoot, state.step, algorithm);
-
-  prevButton.disabled = state.isFirst;
-  nextButton.disabled = state.isLast;
-  togglePlayButton.textContent = state.isPlaying ? "Pause" : "Play";
-}
-
-function bindControls(elements, player) {
-  const {
-    prevButton,
-    nextButton,
-    togglePlayButton,
-    resetButton
-  } = elements;
-
-  prevButton.addEventListener("click", () => {
+function bindControls(roots, player) {
+  roots.prevButton.addEventListener("click", () => {
     player.pause();
     player.prev();
   });
 
-  nextButton.addEventListener("click", () => {
+  roots.nextButton.addEventListener("click", () => {
     player.pause();
     player.next();
   });
 
-  togglePlayButton.addEventListener("click", () => {
+  roots.togglePlayButton.addEventListener("click", () => {
     player.toggle();
   });
 
-  resetButton.addEventListener("click", () => {
+  roots.resetButton.addEventListener("click", () => {
     player.reset();
   });
+
+  if (roots.algorithmSelect) {
+    roots.algorithmSelect.addEventListener("change", (event) => {
+      const nextValue = event.target.value;
+      if (nextValue !== "linear-search") {
+        window.alert("Этот алгоритм пока только как заглушка.");
+        event.target.value = "linear-search";
+      }
+    });
+  }
 }
 
-function startVisualizer() {
-  const algorithm = readAlgorithmConfig();
-  const elements = getRequiredElements();
+function syncControls(roots, state) {
+  roots.prevButton.disabled = state.isFirst;
+  roots.nextButton.disabled = state.isLast;
+  roots.togglePlayButton.textContent = state.isPlaying ? "Пауза" : "Play";
+}
 
-  if (!algorithm?.search || !Array.isArray(algorithm.search.array)) {
-    throw new Error("Некорректный algorithm.search config");
-  }
+function start() {
+  const config = readAlgorithmConfig();
+  const roots = getRoots();
 
-  const steps = buildLinearSearchSteps(algorithm.search);
+  const model = createAlgorithmModel(config);
+  const renderer = createAlgorithmRenderer(roots, model);
 
   const player = createPlayer({
-    steps,
-    delay: algorithm.search.autoplayDelay ?? 700
+    steps: model.steps,
+    delay: model.ui.autoplayDelay
   });
 
   player.subscribe((state) => {
-    renderPlayerState(elements, state, algorithm);
+    renderer.renderFrame(state.step, {
+      stepIndex: state.stepIndex,
+      totalSteps: state.totalSteps
+    });
+
+    syncControls(roots, state);
   });
 
-  bindControls(elements, player);
+  bindControls(roots, player);
 }
 
 try {
-  startVisualizer();
+  start();
 } catch (error) {
   console.error(error);
 
-  const messageRoot = document.getElementById("message-root");
+  const messageRoot = document.getElementById("runtime-message");
   if (messageRoot) {
     messageRoot.textContent = "Не удалось запустить визуализатор.";
   }
