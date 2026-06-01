@@ -1,0 +1,50 @@
+/*
+  Переиспользуемые UI-штуки.
+  Кнопки, селекты и их состояния 
+*/
+
+.btn,
+.select {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  color: var(--text);
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  min-height: 48px;
+}
+
+.btn {
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+
+.btn:hover,
+.select:hover {
+  border-color: var(--accent);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--accent {
+  border-color: var(--accent);
+  background: rgba(153, 222, 223, 0.08);
+}
+
+.btn--danger {
+  border-color: var(--danger);
+}
+
+.select {
+  width: 100%;
+  cursor: pointer;
+}

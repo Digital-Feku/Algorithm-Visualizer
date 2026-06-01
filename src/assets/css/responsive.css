@@ -1,0 +1,78 @@
+/*
+  Адаптивные правки под разные экраны.
+
+*/
+
+@media (max-width: 1180px) {
+  .runtime-topline {
+    grid-template-columns: 1fr;
+  }
+
+  .runtime-controls {
+    justify-content: flex-start;
+  }
+
+  .runtime-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .algorithm-screen__header {
+    grid-template-columns: 1fr;
+    display: grid;
+    align-items: start;
+  }
+
+  .runtime-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .array-bars {
+    gap: 14px;
+  }
+
+  .array-bars__item {
+    flex-basis: 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 16px;
+  }
+
+  .runtime-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .array-stage {
+    padding: 16px;
+  }
+
+  .array-bars {
+    gap: 12px;
+  }
+
+  .array-bars__item {
+    flex-basis: 42px;
+    grid-template-rows: auto minmax(260px, 1fr) auto;
+  }
+
+  .array-bars__track {
+    min-height: 260px;
+  }
+
+  .runtime-panel__head {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .runtime-message {
+    text-align: left;
+  }
+
+  .pseudo-line {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+}

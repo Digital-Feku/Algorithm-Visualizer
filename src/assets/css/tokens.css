@@ -1,0 +1,23 @@
+/*
+  Общие переменные темы
+*/
+
+
+
+:root {
+  --bg-1: #000000;
+  --bg-2: #8C8C8C;
+
+  --panel: rgba(0, 0, 0, 0.88);
+  --panel-2: rgba(0, 0, 0, 0.88);
+
+  --border: #E7E9E7;
+  --border-soft: rgba(231, 233, 231, 0.16);
+
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #99DEDF;
+  --danger: #FC766A;
+
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
