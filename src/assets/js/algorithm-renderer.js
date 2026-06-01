@@ -69,10 +69,10 @@ function renderArrayBars(structure, step) {
 
       <div class="array-bars" role="img" aria-label="Массив столбцов для линейного поиска">
         ${items.map((item) => {
-    const state = item?.state ?? "idle";
-    const height = Number(item?.heightPct ?? 20);
+          const state = item?.state ?? "idle";
+          const height = Number(item?.heightPct ?? 20);
 
-    return `
+          return `
             <div class="array-bars__item is-${escapeHtml(state)}">
               <div class="array-bars__value">${escapeHtml(formatValue(item?.value))}</div>
               <div class="array-bars__track">
@@ -81,7 +81,7 @@ function renderArrayBars(structure, step) {
               <div class="array-bars__index">${escapeHtml(formatValue(item?.index))}</div>
             </div>
           `;
-  }).join("")}
+        }).join("")}
       </div>
     </div>
   `;

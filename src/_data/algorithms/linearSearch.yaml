@@ -1,0 +1,23 @@
+meta:
+  id: linear-search
+  title: Визуализация линейного поиска
+  description: Пошаговый просмотр линейного поиска по массиву
+
+ui:
+  renderer: bars
+  mode: search
+
+search:
+  array:
+    - 4
+    - 12
+    - 7
+    - 19
+    - 2
+    - 15
+    - 9
+    - 21
+    - 6
+    - 18
+  target: 15
+  autoplayDelay: 700
