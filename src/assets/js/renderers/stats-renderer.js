@@ -1,48 +1,40 @@
-// Renderer для stats/message панели
+/*
+  Renderer карточек параметров текущего шага.
+*/
 
+import { escapeHtml, formatValue } from "./renderer-utils.js";
 
-function updateText(element, value) {
-  if (!element) return;
-  element.textContent = value;
+function getStatsConfig(model) {
+  if (Array.isArray(model?.ui?.stats) && model.ui.stats.length > 0) {
+    return model.ui.stats;
+  }
+
+  return [
+    { key: "target", label: "Target" },
+    { key: "index", label: "Index" },
+    { key: "value", label: "Value" },
+    { key: "result", label: "Result" }
+  ];
 }
 
-function getResultLabel(step) {
-  if (!step) {
-    return "Нет данных";
-  }
+export function renderStats(root, model, step) {
+  if (!root) return;
 
-  if (step.kind === "found") {
-    return `Найдено на индексе ${step.foundIndex}`;
-  }
+  const statsConfig = getStatsConfig(model);
+  const statsMap = step?.stats ?? {};
 
-  if (step.kind === "not-found") {
-    return "Не найдено";
-  }
+  root.innerHTML = statsConfig
+    .map((item) => {
+      const key = item?.key ?? "unknown";
+      const label = item?.label ?? key;
+      const value = statsMap[key];
 
-  if (step.kind === "start") {
-    return "Ожидание";
-  }
-
-  return "Идёт поиск";
-}
-
-function getCurrentValue(step) {
-  if (!step || step.currentIndex < 0 || step.currentValue == null) {
-    return "—";
-  }
-
-  return String(step.currentValue);
-}
-
-export function renderStats(statsRoot, messageRoot, step, algorithm) {
-  const targetEl = statsRoot?.querySelector("#stat-target");
-  const indexEl = statsRoot?.querySelector("#stat-index");
-  const valueEl = statsRoot?.querySelector("#stat-value");
-  const resultEl = statsRoot?.querySelector("#stat-result");
-
-  updateText(targetEl, String(algorithm?.search?.target ?? "—"));
-  updateText(indexEl, step?.currentIndex >= 0 ? String(step.currentIndex) : "—");
-  updateText(valueEl, getCurrentValue(step));
-  updateText(resultEl, getResultLabel(step));
-  updateText(messageRoot, step?.message ?? "Нет сообщения");
+      return `
+        <div class="runtime-stat-card">
+          <div class="runtime-stat-card__label">${escapeHtml(label)}</div>
+          <div class="runtime-stat-card__value">${escapeHtml(formatValue(value))}</div>
+        </div>
+      `;
+    })
+    .join("");
 }

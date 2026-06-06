@@ -1,6 +1,9 @@
 meta:
   id: linear-search
   title: Визуализация линейного поиска
+  menuTitle: Linear Search
+  pageUrl: /demo/linear-search/
+  generatePage: false
   description: Поиск нужного значения в массиве путем поочередного сравнения.
 
 engine:
@@ -9,6 +12,15 @@ engine:
 ui:
   renderer: algorithm-runtime
   primaryVisualization: array-bars
+  primaryTitle: Проход по массиву
+  primaryAriaLabel: Массив столбцов для линейного поиска
+  primaryStats:
+    - key: length
+      label: Array length
+    - key: target
+      label: Target
+    - key: index
+      label: Current index
   stats:
     - key: target
       label: Target

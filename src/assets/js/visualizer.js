@@ -83,10 +83,11 @@ function bindControls(roots, player) {
 
   if (roots.algorithmSelect) {
     roots.algorithmSelect.addEventListener("change", (event) => {
-      const nextValue = event.target.value;
-      if (nextValue !== "linear-search") {
-        window.alert("Этот алгоритм пока только как заглушка.");
-        event.target.value = "linear-search";
+      // Адрес приходит из YAML, поэтому обработчик не зависит от типа алгоритма.
+      const nextPageUrl = event.target.value;
+
+      if (nextPageUrl && nextPageUrl !== window.location.pathname) {
+        window.location.assign(nextPageUrl);
       }
     });
   }

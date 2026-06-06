@@ -1,64 +1,65 @@
-// Универсальный renderer для массива-столбцов
+/*
+  Renderer основной области данных для представления array-bars.
+*/
 
+import { escapeHtml, formatValue } from "./renderer-utils.js";
 
-function hasCheckedIndex(step, index) {
-  return Array.isArray(step.checkedIndices) && step.checkedIndices.includes(index);
-}
+function renderPrimaryStats(model, step, items) {
+  const statsConfig = Array.isArray(model?.ui?.primaryStats)
+    ? model.ui.primaryStats
+    : [];
+  const values = {
+    length: items.length,
+    ...model?.data,
+    ...step?.stats
+  };
 
-export function renderBars(container, step) {
-  if (!container) return;
-
-  const array = Array.isArray(step?.array) ? step.array : [];
-
-  container.innerHTML = "";
-
-  if (array.length === 0) {
-    container.innerHTML = `<div class="search-demo__empty">Нет данных для визуализации.</div>`;
-    return;
+  if (statsConfig.length === 0) {
+    return "";
   }
 
-  const maxValue = Math.max(...array, 1);
+  return `
+    <div class="array-stage__meta">
+      ${statsConfig.map((item) => `
+        <div class="array-stage__pill">
+          ${escapeHtml(item?.label ?? item?.key)}:
+          ${escapeHtml(formatValue(values[item?.key]))}
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
 
-  array.forEach((value, index) => {
-    const item = document.createElement("div");
-    item.className = "bar-item";
+function buildArrayBars(structure, model, step, ariaLabel) {
+  const items = Array.isArray(structure?.items) ? structure.items : [];
 
-    const valueLabel = document.createElement("div");
-    valueLabel.className = "bar-value";
-    valueLabel.textContent = String(value);
+  return `
+    <div class="array-stage">
+      ${renderPrimaryStats(model, step, items)}
 
-    const wrap = document.createElement("div");
-    wrap.className = "bar-column-wrap";
+      <div class="array-bars" role="img" aria-label="${escapeHtml(ariaLabel)}">
+        ${items.map((item) => {
+          const state = item?.state ?? "idle";
+          const height = Number(item?.heightPct ?? 20);
 
-    const bar = document.createElement("div");
-    bar.className = "bar-column";
-    bar.style.height = `${Math.max(36, (value / maxValue) * 240)}px`;
-    bar.dataset.index = String(index);
-    bar.dataset.value = String(value);
-    bar.setAttribute("aria-label", `Элемент массива ${value} на индексе ${index}`);
+          return `
+            <div class="array-bars__item is-${escapeHtml(state)}">
+              <div class="array-bars__value">${escapeHtml(formatValue(item?.value))}</div>
+              <div class="array-bars__track">
+                <div class="array-bars__bar" style="height:${height}%"></div>
+              </div>
+              <div class="array-bars__index">${escapeHtml(formatValue(item?.index))}</div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
 
-    if (hasCheckedIndex(step, index)) {
-      bar.classList.add("is-checked");
-    }
+export function renderArrayBars(root, model, step, structure) {
+  if (!root) return;
 
-    if (step.currentIndex === index) {
-      bar.classList.add("is-current");
-    }
-
-    if (step.foundIndex === index) {
-      bar.classList.remove("is-current");
-      bar.classList.add("is-found");
-    }
-
-    const indexLabel = document.createElement("div");
-    indexLabel.className = "bar-index";
-    indexLabel.textContent = `i = ${index}`;
-
-    wrap.appendChild(bar);
-    item.appendChild(valueLabel);
-    item.appendChild(wrap);
-    item.appendChild(indexLabel);
-
-    container.appendChild(item);
-  });
+  const ariaLabel = model?.ui?.primaryAriaLabel ?? "Массив столбцов алгоритма";
+  root.innerHTML = buildArrayBars(structure, model, step, ariaLabel);
 }

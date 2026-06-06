@@ -1,6 +1,7 @@
 {% extends "layouts/base.njk" %}
 
-{% set algorithm = algorithms[algorithmKey] %}
+{# Старые страницы передают algorithmKey, автоматические страницы — готовый algorithmPage. #}
+{% set algorithm = algorithmPage or algorithms[algorithmKey] %}
 
 {% block content %}
   {% if not algorithm %}
@@ -25,10 +26,25 @@
         <div class="algorithm-toolbar">
           <label class="algorithm-toolbar__label" for="algorithm-switcher">Алгоритм</label>
           <select id="algorithm-switcher" class="select" aria-label="Выбор алгоритма">
-            <option value="linear-search" selected>Linear Search</option>
-            <option value="bfs">BFS — скоро</option>
-            <option value="dfs">DFS — скоро</option>
-            <option value="dijkstra">Dijkstra — скоро</option>
+            {# Каждый YAML-файл алгоритма автоматически добавляет пункт списка. #}
+            {% for key, item in algorithms %}
+              <option
+                value="{{ item.meta.pageUrl }}"
+                {% if item.meta.id == algorithm.meta.id %}selected{% endif %}
+              >
+                {{ item.meta.menuTitle or item.meta.title }}
+              </option>
+            {% endfor %}
+
+            {% if not algorithms.bfs %}
+              <option disabled>BFS — скоро</option>
+            {% endif %}
+            {% if not algorithms.dfs %}
+              <option disabled>DFS — скоро</option>
+            {% endif %}
+            {% if not algorithms.dijkstra %}
+              <option disabled>Dijkstra — скоро</option>
+            {% endif %}
           </select>
         </div>
       </header>
@@ -47,7 +63,9 @@
 
         <section class="runtime-panel runtime-panel--hero">
           <div class="runtime-panel__head">
-            <h2 class="runtime-panel__title">Проход по массиву</h2>
+            <h2 class="runtime-panel__title">
+              {{ algorithm.ui.primaryTitle or "Основная визуализация" }}
+            </h2>
             <div id="runtime-message" class="runtime-message">Готово к запуску.</div>
           </div>
           <div id="runtime-primary" class="runtime-flowchart"></div>
